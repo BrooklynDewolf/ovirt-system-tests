@@ -46,14 +46,6 @@
         mode: 0644
       become: true
 
-    - name: Setup ost-images repo
-      ansible.builtin.yum_repository:
-        name: ost-images
-        description: ost-images
-        baseurl: "{{ ost_images_repo_url | default(default_ost_images_repo_url) }}"
-        gpgcheck: no
-      become: true
-
     - name: Setup distro-related vars
       ansible.builtin.set_fact:
         el9: "{{ ansible_facts['distribution_major_version'] | int == 9 }}"
@@ -124,11 +116,6 @@
             state: absent
           when: epel.changed
           become: true
-
-    - name: Install ost images
-      ansible.builtin.dnf:
-        name: "{{ ost_images_rpms | default(default_ost_images_rpms) }}"
-      become: true
 
     - name: Add user to relevant groups
       ansible.builtin.user:
